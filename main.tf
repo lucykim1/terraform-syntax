@@ -12,19 +12,13 @@ provider "aws" {
   region = "ap-southeast-3"
 }
 
-# 개발환경
-module "default_custom_vpc" {
-  source = "./custom_vpc"
-  env    = "dev"
+variable "names" {
+  type    = list(string)
+  default = ["김샛별", "정동환"]
 }
 
-# 운영환경
-module "prd_custom_vpc" {
-  source = "./custom_vpc"
-  env    = "prd"
-}
-
-resource "test_instance" "x" {
-  prd_vpc_id = module.prd_custom_vpc.vpc_id
-  dev_vpc_id = module.default_custom_vpc.vpc_id
+module "personal_custom_vpc" {
+  for_each = toset(var.names)
+  source   = "./custom_vpc"
+  env      = "personal_${each.key}"
 }
