@@ -18,7 +18,7 @@ variable "names" {
 }
 
 module "personal_custom_vpc" {
-  for_each = toset(var.names)
+  for_each = toset([for s in var.names : "${s}_test"])
   source   = "./custom_vpc"
   env      = "personal_${each.key}"
 }
