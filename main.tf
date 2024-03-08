@@ -12,13 +12,13 @@ provider "aws" {
   region = "ap-southeast-3"
 }
 
-variable "names" {
+variable "envs" {
   type    = list(string)
-  default = ["김샛별", "정동환"]
+  default = ["dev", "prd", ""]
 }
 
-module "personal_custom_vpc" {
-  for_each = toset([for s in var.names : "${s}_test"])
+module "vpc_list" {
+  for_each = toset([for s in var.envs : s if s != ""])
   source   = "./custom_vpc"
-  env      = "personal_${each.key}"
+  env      = each.key
 }
